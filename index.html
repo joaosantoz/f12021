@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Socket.IO</title>
+	<style>
+		body,
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		.section {
+			position: relative;
+			height: 100vh;
+			width: 100vw;
+		}
+
+		.gear {
+			font-size: 6rem;
+			color: black;
+			font-weight: bold;
+			position: absolute;
+			top: 10%;
+			left: 42%;
+			transform: translateX(-50%);
+		}
+
+		.rpm {
+			font-size: 3rem;
+			color: black;
+			font-weight: bold;
+			position: absolute;
+			top: 15%;
+			left: 56%;
+			transform: translateX(-50%);
+		}
+
+		.speed {
+			font-size: 6rem;
+			color: black;
+			font-weight: bold;
+			position: absolute;
+			top: 35%;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
+		.rev-percentage {
+			position: absolute;
+			top: 30%;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			max-width: 400px;
+			width: 100%;
+			justify-content: space-between;
+			overflow-x: hidden;
+		}
+
+		.rev-background-container {
+			position: absolute;
+			height: 20px;
+			max-width: 400px;
+			width: 0%;
+			left: 0;
+			background: white;
+		}
+
+		.circle {
+			display: block;
+			height: 20px;
+			width: 20px;
+			border-radius: 50px;
+		}
+		.circle.green { background: green; }
+		.circle.red { background: red; }
+		.circle.blue { background: blue; }
+	</style>
+</head>
+
+<body>
+	<section class="section">
+		<p class="gear">0</p>
+		<p class="rpm">0 rpm</p>
+		<div class="rev-percentage">
+			<div class="rev-background-container"></div>
+			<div class="circle green"></div>
+			<div class="circle green"></div>
+			<div class="circle green"></div>
+			<div class="circle green"></div>
+			<div class="circle green"></div>
+			<div class="circle red"></div>
+			<div class="circle red"></div>
+			<div class="circle red"></div>
+			<div class="circle red"></div>
+			<div class="circle red"></div>
+			<div class="circle blue"></div>
+			<div class="circle blue"></div>
+			<div class="circle blue"></div>
+			<div class="circle blue"></div>
+			<div class="circle blue"></div>
+		</div>
+		<p class="speed">0 KPH</p>
+	</section>
+	<script src="/socket.io/socket.io.js"></script>
+
+	<script>
+		var socket = io();
+		socket.on('telemetry', function (data) {
+			const speedItem = document.querySelector('.speed');
+			const revContainer = document.querySelector('.rev-background-container');
+			const gearItem = document.querySelector('.gear');
+			const rpmItem = document.querySelector('.rpm');
+
+			speedItem.innerHTML = data[0].m_speed + ' KPH';
+			revContainer.style.width = data[0].m_revLightsPercent + '%';
+			gearItem.innerHTML = data[0].m_gear
+			rpmItem.innerHTML = data[0].m_engineRPM + ' rpm';
+			console.log(data[0].m_revLightsPercent);
+		});
+	</script>
+</body>
+
+</html>
